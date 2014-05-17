@@ -77,10 +77,6 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     uvcControl.setBrightness(brightValue);
     uvcControl.setContrast(contrastValue);
     
-    
-    /// thread para guardar fotos
-    recorder.setPrefix(ofToDataPath("fotos/"));
-    recorder.setFormat("jpg");
 
     //sound
     shutter.loadSound("camera_shutter.mp3");
@@ -88,7 +84,7 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     
     //timers
     timerFoto.setup(_photoSpeed);
-    timerCambioCamara.setup(1500);
+    timerCambioCamara.setup(1000);
     
     ofAddListener(timerFoto.TIMER_COMPLETE , this, &camaras::timerFotoComplete);
     ofAddListener(timerCambioCamara.TIMER_COMPLETE , this, &camaras::timerCambioCamaraComplete);
@@ -160,7 +156,7 @@ void camaras::timerFotoComplete( int &args ){
         
         if(getAverageColor(vidGrabber.getPixelsRef())>thresholdBrightnes){
             //cout << "FOTOOOOOO" << endl;
-            recorder.addFrame(vidGrabber.getPixelsRef());
+            recorder.addFrame(vidGrabber.getPixelsRef(), "/"+ofGetTimestampString()+".jpg");
             shutter.play();
         }else{
             cout << "OSCURO" << endl;

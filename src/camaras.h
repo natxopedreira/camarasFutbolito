@@ -14,7 +14,7 @@
 #include "ofxYAML.h"
 #include "ofxGui.h"
 #include "ofxSimpleTimer.h"
-#include "ofxImageSequenceRecorder.h"
+#include "ImageSequenceRecorder.h"
 
 class camaras{
 public:
@@ -57,7 +57,7 @@ public:
     
     ofSoundPlayer  shutter;
     
-    ofxImageSequenceRecorder recorder;
+    ImageSequenceRecorder recorder;
     
 };
 #endif
