@@ -3,8 +3,9 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     //int _indexCam, int _maxPhotos, int _photoSpeed
+    string ruta = "/Users/ignaciopedreiragonzalez/Documents/OF_FUTBOLITO_081/apps/futbolito/camarasFutbolito/bin/data/fotos/";
     
-    camFutbolito.setup(0,3,600);
+    camFutbolito.setup(0,3,600,ruta);
 }
 
 //--------------------------------------------------------------
@@ -30,39 +31,8 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
     camFutbolito.dispara();
-}
-
-//--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
-
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
-
+    
+    if (key == 'd' ||key == 'D'){
+        camFutbolito.debugMode = !camFutbolito.debugMode;
+    }
 }

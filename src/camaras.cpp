@@ -10,7 +10,7 @@
 
 
 //--------------------------------------------------------------
-void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
+void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _rutaCarpeta){
     
     yaml.load("camera_settings.yml");
     
@@ -36,13 +36,11 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
         }
     }
     
-    
+    rutaCarpeta = _rutaCarpeta;
     maxPhotosPerCamera = _maxPhotos;
     madePhotos = 0;
     
     indexCamera = _indexCam;
-    
-    
     vidGrabber.setDeviceID(indexCamera);
     
     
@@ -77,6 +75,8 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     uvcControl.setBrightness(brightValue);
     uvcControl.setContrast(contrastValue);
     
+    // debug mode
+    debugMode = false;
 
     //sound
     shutter.loadSound("camera_shutter.mp3");
@@ -117,12 +117,14 @@ void camaras::update(){
 void camaras::draw(){
     ofBackground(0);
     tex.draw(0,0, camWidth, camHeight);
+   
+    if(debugMode){
+        ofSetColor(255);
+        timerFoto.draw(camWidth - 250, 20);
+        timerCambioCamara.draw(camWidth - 250, 45);
     
-    ofSetColor(255);
-    timerFoto.draw(camWidth - 250, 20);
-    timerCambioCamara.draw(camWidth - 250, 45);
-    
-    gui.draw();
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
@@ -156,7 +158,7 @@ void camaras::timerFotoComplete( int &args ){
         
         if(getAverageColor(vidGrabber.getPixelsRef())>thresholdBrightnes){
             //cout << "FOTOOOOOO" << endl;
-            recorder.addFrame(vidGrabber.getPixelsRef(), "/Users/ignaciopedreiragonzalez/Documents/OF_FUTBOLITO_081/apps/futbolito/camarasFutbolito/bin/data/fotos/"+ofGetTimestampString()+".jpg");
+            recorder.addFrame(vidGrabber.getPixelsRef(), rutaCarpeta +ofGetTimestampString()+".jpg");
             shutter.play();
         }else{
             cout << "OSCURO" << endl;

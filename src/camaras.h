@@ -18,7 +18,7 @@
 
 class camaras{
 public:
-    void setup(int _indexCam, int _maxPhotos, int _photoSpeed);
+    void setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _rutaCarpeta);
     void update();
     void draw();
     
@@ -29,17 +29,20 @@ public:
     void dispara();
     
     ofQTKitGrabber	vidGrabber;
-    
+    ofSoundPlayer  shutter;
     ofTexture tex;
-    
-    ofxUVC uvcControl;
-    ofxYAML yaml;
+    ImageSequenceRecorder recorder;
+
     string cameraName;
     vector<string> availableCams;
     
+    int maxPhotosPerCamera;
+    int madePhotos;
+    int indexCamera;
     int camWidth, camHeight;
-    
     float focus;
+    bool debugMode;
+    string rutaCarpeta;
     
     vector<ofxUVCControl> controls;
     
@@ -50,14 +53,11 @@ public:
     
     ofxSimpleTimer timerFoto;
     ofxSimpleTimer timerCambioCamara;
+    ofxUVC uvcControl;
+    ofxYAML yaml;
+
     
-    int maxPhotosPerCamera;
-    int madePhotos;
-    int indexCamera;
-    
-    ofSoundPlayer  shutter;
-    
-    ImageSequenceRecorder recorder;
+
     
 };
 #endif
