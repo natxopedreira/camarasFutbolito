@@ -36,7 +36,16 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
         }
     }
     
-    vidGrabber.setDeviceID(deviceId);
+    
+    maxPhotosPerCamera = _maxPhotos;
+    madePhotos = 0;
+    
+    indexCamera = _indexCam;
+    
+    
+    vidGrabber.setDeviceID(indexCamera);
+    
+    
     
     uvcControl.useCamera(vendorId, productId, interfaceNum);
     uvcControl.setAutoWhiteBalance(false);
@@ -72,12 +81,10 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     /// thread para guardar fotos
     recorder.setPrefix(ofToDataPath("fotos/"));
     recorder.setFormat("jpg");
-    recorder.startThread(false, true);
-    
-    maxPhotosPerCamera = _maxPhotos;
-    madePhotos = 0;
-    
-    indexCamera = _indexCam;
+
+    //sound
+    shutter.loadSound("camera_shutter.mp3");
+    shutter.setMultiPlay(false);
     
     //timers
     timerFoto.setup(_photoSpeed);
@@ -90,6 +97,7 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
 //--------------------------------------------------------------
 void camaras::update(){
     timerFoto.update();
+    timerCambioCamara.update();
     
     vidGrabber.update();
     if(vidGrabber.isFrameNew())
@@ -151,8 +159,11 @@ void camaras::timerFotoComplete( int &args ){
 
         
         if(getAverageColor(vidGrabber.getPixelsRef())>thresholdBrightnes){
-            cout << "FOTOOOOOO" << endl;
+            //cout << "FOTOOOOOO" << endl;
             recorder.addFrame(vidGrabber.getPixelsRef());
+            shutter.play();
+        }else{
+            cout << "OSCURO" << endl;
         }
         madePhotos++;
         
@@ -168,9 +179,12 @@ void camaras::timerFotoComplete( int &args ){
         indexCamera++;
         
         if(indexCamera<availableCams.size()){
+            vidGrabber.setDeviceID(indexCamera);
+            cout << "CAMARA setDeviceID" << indexCamera << endl;
             timerCambioCamara.start(false);
         }else{
             indexCamera = 0;
+            vidGrabber.setDeviceID(indexCamera);
         }
 
     }
@@ -179,7 +193,6 @@ void camaras::timerFotoComplete( int &args ){
 //--------------------------------------------------------------
 void camaras::timerCambioCamaraComplete( int &args ){
     //camara cambiada
-    cout << "CAMARA CAMBIADA" << endl;
     dispara();
 }
 //--------------------------------------------------------------

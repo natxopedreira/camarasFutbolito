@@ -55,7 +55,7 @@ public:
     int madePhotos;
     int indexCamera;
     
-
+    ofSoundPlayer  shutter;
     
     ofxImageSequenceRecorder recorder;
     
