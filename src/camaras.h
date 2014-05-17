@@ -23,7 +23,7 @@ public:
     void draw();
     
     
-    void averageColorOfArea(int cx, int cy, int avgW,int avgH);
+    int getAverageColor(const ofPixels & pix);
     void timerCambioCamaraComplete( int &args );
     void timerFotoComplete( int &args );
     void dispara();
@@ -45,6 +45,7 @@ public:
     
     ofxPanel gui;
     ofxFloatSlider whiteValues, exposureValue, gainValue, satValue, focusValue, brightValue, contrastValue;
+    ofxIntSlider thresholdBrightnes;
     ofxToggle setsettings;
     
     ofxSimpleTimer timerFoto;

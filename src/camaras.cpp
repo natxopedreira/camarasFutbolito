@@ -53,8 +53,11 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     gui.add(brightValue.setup("brightness", 0, 0, 1));
     gui.add(satValue.setup("saturacion", 0, 0, 1));
     gui.add(contrastValue.setup("contraste", 0, 0, 1));
+    gui.add(thresholdBrightnes.setup("threshold image valid", 0, 0, 255));
     gui.add(setsettings.setup("live settings", false));
+    
     gui.loadFromFile("settings.xml");
+    
     
     /// set gui values to uvc
     uvcControl.setWhiteBalance(whiteValues);
@@ -64,6 +67,7 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed){
     uvcControl.setAbsoluteFocus(focusValue);
     uvcControl.setBrightness(brightValue);
     uvcControl.setContrast(contrastValue);
+    
     
     /// thread para guardar fotos
     recorder.setPrefix(ofToDataPath("fotos/"));
@@ -118,43 +122,40 @@ void camaras::draw(){
 }
 
 //--------------------------------------------------------------
-void camaras::averageColorOfArea(int cx, int cy, int avgW,int avgH){
-	//average a certain area around a point in a pixel area
-	//return the resulting averaged color in hex/int
-	int rr = 0;
-	int gg = 0;
-	int bb = 0;
-	float cnt=0;
-	for (int xx = cx-avgW; xx <= cx+avgW; xx++){
-		for (int yy = cy-avgH; yy <= cy+avgH; yy++){
-			int cxx = xx;
-			int cyy = yy;
-			if(xx < 0) cxx = 0;
-			if(xx >= camWidth) cxx = camWidth-1;
-			if(yy < 0) cyy = 0;
-			if(yy >= camHeight) cyy = camHeight-1;
-            
-			//rr = rr + pixels[(cyy * camWidth*3) + cxx * 3 + 0];
-			//gg = gg + pixels[(cyy * camWidth*3) + cxx * 3 + 1];
-			//bb = bb + pixels[(cyy * camWidth*3) + cxx * 3 + 2];
-			cnt++;
-		}
-	}
-	rr = int(rr/cnt);
-	gg = int(gg/cnt);
-	bb = int(bb/cnt);
-	int lookUpIdx = (rr << 16) + (gg << 8) + bb;
-	return lookUpIdx;
+int camaras::getAverageColor(const ofPixels & pix) {
+    
+    int pixelSize = pix.size();
+    int r = 0, g = 0, b = 0;
+    
+    for (int i=0; i<pixelSize; i++) {
+        
+        ofColor c = pix[i];
+        r += (c.r >> 16) & 0xFF;
+        g += (c.g >> 8)  & 0xFF;
+        b += c.b  & 0xFF;
+    }
+    r /= pixelSize;
+    g /= pixelSize;
+    b /= pixelSize;
+    ofColor cAverage = ofColor(r, g, b);
+    return cAverage.getBrightness();
 }
 
 //--------------------------------------------------------------
 void camaras::timerFotoComplete( int &args ){
     //saca foto
     if (madePhotos<maxPhotosPerCamera) {
-        cout << "FOTOOOOOO" << endl;
-        recorder.addFrame(vidGrabber.getPixelsRef());
+        /// check for valid image
+        /// if brightness < thresholdBrightness
+        /// the camera its on the box so dont use
+
         
+        if(getAverageColor(vidGrabber.getPixelsRef())>thresholdBrightnes){
+            cout << "FOTOOOOOO" << endl;
+            recorder.addFrame(vidGrabber.getPixelsRef());
+        }
         madePhotos++;
+        
     }else{
         // no mas fotos
 
