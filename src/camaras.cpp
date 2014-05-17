@@ -156,7 +156,7 @@ void camaras::timerFotoComplete( int &args ){
         
         if(getAverageColor(vidGrabber.getPixelsRef())>thresholdBrightnes){
             //cout << "FOTOOOOOO" << endl;
-            recorder.addFrame(vidGrabber.getPixelsRef(), "/"+ofGetTimestampString()+".jpg");
+            recorder.addFrame(vidGrabber.getPixelsRef(), "/Users/ignaciopedreiragonzalez/Documents/OF_FUTBOLITO_081/apps/futbolito/camarasFutbolito/bin/data/fotos/"+ofGetTimestampString()+".jpg");
             shutter.play();
         }else{
             cout << "OSCURO" << endl;
