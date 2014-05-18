@@ -27,23 +27,14 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     
     vidGrabber.initGrabber(camWidth, camHeight);
     
-    int deviceId = 0;
-    availableCams = vidGrabber.listVideoDevices();
-    
-    for(int i = 0; i < availableCams.size(); i++){
-        if(availableCams.at(i) == cameraName){
-            deviceId = i;
-        }
-    }
+    availableCams = vidGrabber.listDevices();
     
     rutaCarpeta = _rutaCarpeta;
     maxPhotosPerCamera = _maxPhotos;
     madePhotos = 0;
     
     indexCamera = _indexCam;
-    vidGrabber.setDeviceID(indexCamera);
-    
-    
+    vidGrabber.setDeviceID(availableCams.at(indexCamera).id);
     
     uvcControl.useCamera(vendorId, productId, interfaceNum);
     uvcControl.setAutoWhiteBalance(false);
@@ -171,21 +162,39 @@ void camaras::timerFotoComplete( int &args ){
         timerFoto.stop();
         madePhotos = 0;
         
-        //si hay mas camaras
-        //cambia la camara
-        // si no hay mas camaras se acabo
-        indexCamera++;
+        //borras la camara del vector
+        if(availableCams.size()>0) availableCams.erase(availableCams.begin()+indexCamera);
         
-        if(indexCamera<availableCams.size()){
-            vidGrabber.setDeviceID(indexCamera);
-            cout << "CAMARA setDeviceID" << indexCamera << endl;
-            timerCambioCamara.start(false);
-        }else{
-            indexCamera = 0;
-            vidGrabber.setDeviceID(indexCamera);
-        }
-
+        cambiaCamara(0);
     }
+}
+
+//--------------------------------------------------------------
+void camaras::cambiaCamara(int _indexCamera){
+
+    if(_indexCamera<availableCams.size()){
+        // esta dentro del array
+        vidGrabber.setDeviceID(availableCams.at(_indexCamera).id);
+        cout << "CAMARA setDeviceID" << _indexCamera << endl;
+        
+        timerCambioCamara.start(false);
+        indexCamera = _indexCamera;
+        
+    }
+}
+
+//--------------------------------------------------------------
+void camaras::camaraGol(int _camara){
+    //cuando marcas un gol
+    //la primera camara que se dispara es la del que
+    //ha marcado
+    
+    availableCams.clear();
+    availableCams = vidGrabber.listDevices();
+    
+    camaraInicial = _camara;
+    cambiaCamara(_camara);
+    
 }
 
 //--------------------------------------------------------------
@@ -193,6 +202,7 @@ void camaras::timerCambioCamaraComplete( int &args ){
     //camara cambiada
     dispara();
 }
+
 //--------------------------------------------------------------
 void camaras::dispara(){
     timerFoto.start(true);

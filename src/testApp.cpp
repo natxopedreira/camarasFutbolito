@@ -30,9 +30,11 @@ void testApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
-    camFutbolito.dispara();
+    
     
     if (key == 'd' ||key == 'D'){
         camFutbolito.debugMode = !camFutbolito.debugMode;
+    }else{
+        camFutbolito.camaraGol(1);
     }
 }

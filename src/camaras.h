@@ -26,7 +26,11 @@ public:
     int getAverageColor(const ofPixels & pix);
     void timerCambioCamaraComplete( int &args );
     void timerFotoComplete( int &args );
+    
     void dispara();
+    void cambiaCamara(int _indexCamera);
+    
+    void camaraGol(int _camara);
     
     ofQTKitGrabber	vidGrabber;
     ofSoundPlayer  shutter;
@@ -34,10 +38,11 @@ public:
     ImageSequenceRecorder recorder;
 
     string cameraName;
-    vector<string> availableCams;
+    vector<ofVideoDevice> availableCams;
     
     int maxPhotosPerCamera;
     int madePhotos;
+    int camaraInicial;
     int indexCamera;
     int camWidth, camHeight;
     float focus;
@@ -55,9 +60,5 @@ public:
     ofxSimpleTimer timerCambioCamara;
     ofxUVC uvcControl;
     ofxYAML yaml;
-
-    
-
-    
 };
 #endif
