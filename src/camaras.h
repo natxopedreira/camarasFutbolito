@@ -11,7 +11,6 @@
 
 #include "ofMain.h"
 #include "ofxUVC.h"
-#include "ofxYAML.h"
 #include "ofxGui.h"
 #include "ofxSimpleTimer.h"
 #include "ImageSequenceRecorder.h"
@@ -26,6 +25,7 @@ public:
     int getAverageColor(const ofPixels & pix);
     void timerCambioCamaraComplete( int &args );
     void timerFotoComplete( int &args );
+    void initCameras();
     
     void dispara();
     void cambiaCamara(int _indexCamera);
@@ -50,6 +50,7 @@ public:
     string rutaCarpeta;
     
     vector<ofxUVCControl> controls;
+    ofxUVC uvcControl;
     
     ofxPanel gui;
     ofxFloatSlider whiteValues, exposureValue, gainValue, satValue, focusValue, brightValue, contrastValue;
@@ -58,7 +59,5 @@ public:
     
     ofxSimpleTimer timerFoto;
     ofxSimpleTimer timerCambioCamara;
-    ofxUVC uvcControl;
-    ofxYAML yaml;
 };
 #endif

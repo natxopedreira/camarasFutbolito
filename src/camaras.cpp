@@ -12,20 +12,8 @@
 //--------------------------------------------------------------
 void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _rutaCarpeta){
     
-    yaml.load("camera_settings.yml");
-    
-    int cameraToUse;
-    yaml.doc["cameraToUse"] >> cameraToUse;
-    
-    int vendorId, productId, interfaceNum;
-    yaml.doc["cameras"][cameraToUse]["vendorId"] >> vendorId;
-    yaml.doc["cameras"][cameraToUse]["productId"] >> productId;
-    yaml.doc["cameras"][cameraToUse]["interfaceNum"] >> interfaceNum;
-    yaml.doc["cameras"][cameraToUse]["name"] >> cameraName;
-    yaml.doc["cameras"][cameraToUse]["width"] >> camWidth;
-    yaml.doc["cameras"][cameraToUse]["height"] >> camHeight;
-    
-    vidGrabber.initGrabber(camWidth, camHeight);
+    camWidth = 1280;
+    camHeight = 720;
     
     availableCams = vidGrabber.listDevices();
     
@@ -34,13 +22,7 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     madePhotos = 0;
     
     indexCamera = _indexCam;
-    vidGrabber.setDeviceID(availableCams.at(indexCamera).id);
-    
-    uvcControl.useCamera(vendorId, productId, interfaceNum);
-    uvcControl.setAutoWhiteBalance(false);
-    uvcControl.setAutoExposure(false);
-    uvcControl.setAutoFocus(false);
-    controls = uvcControl.getCameraControls();
+    initCameras();
     
     /// gui
     gui.setup("controles de camaras");
@@ -80,7 +62,18 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     ofAddListener(timerFoto.TIMER_COMPLETE , this, &camaras::timerFotoComplete);
     ofAddListener(timerCambioCamara.TIMER_COMPLETE , this, &camaras::timerCambioCamaraComplete);
 }
+//--------------------------------------------------------------
+void camaras::initCameras(){
+    vidGrabber.setDeviceID(availableCams.at(indexCamera).id);
+    vidGrabber.initGrabber(camWidth, camHeight);
+    
+    uvcControl.useCamera(0x046d, 0x82d, 0x03);
+    uvcControl.setAutoWhiteBalance(false);
+    uvcControl.setAutoExposure(false);
+    uvcControl.setAutoFocus(false);
+    controls = uvcControl.getCameraControls();
 
+}
 //--------------------------------------------------------------
 void camaras::update(){
     timerFoto.update();
@@ -171,12 +164,15 @@ void camaras::timerFotoComplete( int &args ){
 
 //--------------------------------------------------------------
 void camaras::cambiaCamara(int _indexCamera){
+    //si hay mas camaras
+    //cambia la camara
+    // si no hay mas camaras se acabo
+    //quita la camara del array
 
     if(_indexCamera<availableCams.size()){
         // esta dentro del array
         vidGrabber.setDeviceID(availableCams.at(_indexCamera).id);
         cout << "CAMARA setDeviceID" << _indexCamera << endl;
-        
         timerCambioCamara.start(false);
         indexCamera = _indexCamera;
         
@@ -188,7 +184,6 @@ void camaras::camaraGol(int _camara){
     //cuando marcas un gol
     //la primera camara que se dispara es la del que
     //ha marcado
-    
     availableCams.clear();
     availableCams = vidGrabber.listDevices();
     

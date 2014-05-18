@@ -5,7 +5,7 @@ void testApp::setup(){
     //int _indexCam, int _maxPhotos, int _photoSpeed
     string ruta = "/Users/ignaciopedreiragonzalez/Documents/OF_FUTBOLITO_081/apps/futbolito/camarasFutbolito/bin/data/fotos/";
     
-    camFutbolito.setup(0,3,600,ruta);
+    camFutbolito.setup(2,3,600,ruta);
 }
 
 //--------------------------------------------------------------
