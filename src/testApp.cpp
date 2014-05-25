@@ -31,10 +31,36 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::keyReleased(int key){
     
-    
-    if (key == 'd' ||key == 'D'){
-        camFutbolito.debugMode = !camFutbolito.debugMode;
-    }else{
-        camFutbolito.camaraGol(1);
+    switch (key) {
+        case 'd':
+             camFutbolito.debugMode = !camFutbolito.debugMode;
+            break;
+
+        case 48:
+            if(camFutbolito.debugMode){
+                camFutbolito.cambiaCamaraDebug(0);
+            }else{
+                camFutbolito.camaraGol(0);
+            }
+            break;
+            
+        case 49:
+            if(camFutbolito.debugMode){
+                camFutbolito.cambiaCamaraDebug(1);
+            }else{
+                camFutbolito.camaraGol(1);
+            }
+            break;
+            
+        case 50:
+            if(camFutbolito.debugMode){
+                camFutbolito.cambiaCamaraDebug(2);
+            }else{
+                camFutbolito.camaraGol(2);
+            }
+            break;
+            
+        default:
+            break;
     }
 }

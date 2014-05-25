@@ -54,26 +54,35 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     gui.add(contrastValue2.setup("CAM2 contraste", 0, 0, 1));
     
     
-    vidGrabber.setDeviceID(1);
+    vidGrabber.setDeviceID(indexCamera);
     vidGrabber.initGrabber(camWidth, camHeight);
     
+    
+    
+    
+    
+    
     //uvcControl0
-    uvcControl0.setCamera(437452800);
-    uvcControl0.setAutoWhiteBalance(false);
-    uvcControl0.setAutoExposure(false);
-    uvcControl0.setAutoFocus(false);
-    
+    if(availableCams.size()>0){
+        uvcControl0.setCamera(ofToInt(availableCams.at(0).deviceName));
+        uvcControl0.setAutoWhiteBalance(false);
+        uvcControl0.setAutoExposure(false);
+        uvcControl0.setAutoFocus(false);
+    }
     //uvcControl1
-    uvcControl1.setCamera(487784448);
-    uvcControl1.setAutoWhiteBalance(false);
-    uvcControl1.setAutoExposure(false);
-    uvcControl1.setAutoFocus(false);
-    
+    if(availableCams.size()>1){
+        uvcControl1.setCamera(ofToInt(availableCams.at(1).deviceName));
+        uvcControl1.setAutoWhiteBalance(false);
+        uvcControl1.setAutoExposure(false);
+        uvcControl1.setAutoFocus(false);
+    }
     //uvcControl2
-    uvcControl2.setCamera(437387264);
-    uvcControl2.setAutoWhiteBalance(false);
-    uvcControl2.setAutoExposure(false);
-    uvcControl2.setAutoFocus(false);
+    if(availableCams.size()>2){
+        uvcControl2.setCamera(ofToInt(availableCams.at(2).deviceName));
+        uvcControl2.setAutoWhiteBalance(false);
+        uvcControl2.setAutoExposure(false);
+        uvcControl2.setAutoFocus(false);
+    }
     
     controls0 = uvcControl0.getCameraControls();
     controls1 = uvcControl1.getCameraControls();
@@ -137,41 +146,45 @@ void camaras::update(){
         tex.loadData(vidGrabber.getPixelsRef());
     }
     
-    
-    
     // OFXUVC
     //
-    controls0 = uvcControl0.getCameraControls();
-    controls1 = uvcControl1.getCameraControls();
-    controls2 = uvcControl2.getCameraControls();
+    if(availableCams.size()>0) controls0 = uvcControl0.getCameraControls();
+    if(availableCams.size()>1) controls1 = uvcControl1.getCameraControls();
+    if(availableCams.size()>2) controls2 = uvcControl2.getCameraControls();
     
     if(setsettings){
         // uvcControl0
-        uvcControl0.setWhiteBalance(whiteValues0);
-        uvcControl0.setExposure(exposureValue0);
-        uvcControl0.setGain(gainValue0);
-        uvcControl0.setSaturation(satValue0);
-        uvcControl0.setAbsoluteFocus(focusValue0);
-        uvcControl0.setBrightness(brightValue0);
-        uvcControl0.setContrast(contrastValue0);
+        if(availableCams.size()>0){
+            uvcControl0.setWhiteBalance(whiteValues0);
+            uvcControl0.setExposure(exposureValue0);
+            uvcControl0.setGain(gainValue0);
+            uvcControl0.setSaturation(satValue0);
+            uvcControl0.setAbsoluteFocus(focusValue0);
+            uvcControl0.setBrightness(brightValue0);
+            uvcControl0.setContrast(contrastValue0);
+        }
+
         
         // uvcControl1
-        uvcControl1.setWhiteBalance(whiteValues1);
-        uvcControl1.setExposure(exposureValue1);
-        uvcControl1.setGain(gainValue1);
-        uvcControl1.setSaturation(satValue1);
-        uvcControl1.setAbsoluteFocus(focusValue1);
-        uvcControl1.setBrightness(brightValue1);
-        uvcControl1.setContrast(contrastValue1);
-        
+        if(availableCams.size()>1){
+            uvcControl1.setWhiteBalance(whiteValues1);
+            uvcControl1.setExposure(exposureValue1);
+            uvcControl1.setGain(gainValue1);
+            uvcControl1.setSaturation(satValue1);
+            uvcControl1.setAbsoluteFocus(focusValue1);
+            uvcControl1.setBrightness(brightValue1);
+            uvcControl1.setContrast(contrastValue1);
+        }
         // uvcControl2
-        uvcControl2.setWhiteBalance(whiteValues2);
-        uvcControl2.setExposure(exposureValue2);
-        uvcControl2.setGain(gainValue2);
-        uvcControl2.setSaturation(satValue2);
-        uvcControl2.setAbsoluteFocus(focusValue2);
-        uvcControl2.setBrightness(brightValue2);
-        uvcControl2.setContrast(contrastValue2);
+        if(availableCams.size()>2){
+            uvcControl2.setWhiteBalance(whiteValues2);
+            uvcControl2.setExposure(exposureValue2);
+            uvcControl2.setGain(gainValue2);
+            uvcControl2.setSaturation(satValue2);
+            uvcControl2.setAbsoluteFocus(focusValue2);
+            uvcControl2.setBrightness(brightValue2);
+            uvcControl2.setContrast(contrastValue2);
+        }
     }
 }
 
@@ -184,7 +197,7 @@ void camaras::draw(){
         ofSetColor(255);
         timerFoto.draw(camWidth - 250, 20);
         timerCambioCamara.draw(camWidth - 250, 45);
-    
+        ofDrawBitmapStringHighlight("CAMARA ACTUAL ID "+ofToString(indexCamera) + "\n\nLOCATION ID " + availableCams.at(indexCamera).deviceName, camWidth - 250, 80);
         gui.draw();
     }
 }
@@ -257,6 +270,15 @@ void camaras::cambiaCamara(int _indexCamera){
     }
 }
 
+//--------------------------------------------------------------
+void camaras::cambiaCamaraDebug(int _indexCamera){
+    if(_indexCamera<availableCams.size()){
+        // esta dentro del array
+        vidGrabber.setDeviceID(availableCams.at(_indexCamera).id);
+        cout << "CAMARA setDeviceID" << _indexCamera << endl;
+         indexCamera = _indexCamera;
+    }
+}
 //--------------------------------------------------------------
 void camaras::camaraGol(int _camara){
     //cuando marcas un gol

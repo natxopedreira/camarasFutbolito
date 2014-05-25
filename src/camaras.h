@@ -28,6 +28,7 @@ public:
     
     void dispara();
     void cambiaCamara(int _indexCamera);
+    void cambiaCamaraDebug(int _indexCamera);
     
     void camaraGol(int _camara);
     
@@ -53,6 +54,9 @@ public:
     vector<ofxUVCControl> controls1;
     vector<ofxUVCControl> controls2;
     ofxUVC uvcControl0, uvcControl1, uvcControl2;
+    
+    //// oFX UVC dinamic
+    vector<ofxUVC> controles;
     
     // ImageSequenceRecorder
     ImageSequenceRecorder recorder;
