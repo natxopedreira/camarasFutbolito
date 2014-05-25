@@ -25,7 +25,6 @@ public:
     int getAverageColor(const ofPixels & pix);
     void timerCambioCamaraComplete( int &args );
     void timerFotoComplete( int &args );
-    void initCameras();
     
     void dispara();
     void cambiaCamara(int _indexCamera);
@@ -35,7 +34,7 @@ public:
     ofQTKitGrabber	vidGrabber;
     ofSoundPlayer  shutter;
     ofTexture tex;
-    ImageSequenceRecorder recorder;
+    
 
     string cameraName;
     vector<ofVideoDevice> availableCams;
@@ -49,14 +48,24 @@ public:
     bool debugMode;
     string rutaCarpeta;
     
-    vector<ofxUVCControl> controls;
-    ofxUVC uvcControl;
+    // OFXUVC
+    vector<ofxUVCControl> controls0;
+    vector<ofxUVCControl> controls1;
+    vector<ofxUVCControl> controls2;
+    ofxUVC uvcControl0, uvcControl1, uvcControl2;
     
+    // ImageSequenceRecorder
+    ImageSequenceRecorder recorder;
+    
+    /// GUI
     ofxPanel gui;
-    ofxFloatSlider whiteValues, exposureValue, gainValue, satValue, focusValue, brightValue, contrastValue;
+    ofxFloatSlider whiteValues0, exposureValue0, gainValue0, satValue0, focusValue0, brightValue0, contrastValue0;
+    ofxFloatSlider whiteValues1, exposureValue1, gainValue1, satValue1, focusValue1, brightValue1, contrastValue1;
+    ofxFloatSlider whiteValues2, exposureValue2, gainValue2, satValue2, focusValue2, brightValue2, contrastValue2;
     ofxIntSlider thresholdBrightnes;
     ofxToggle setsettings;
     
+    /// TIMER
     ofxSimpleTimer timerFoto;
     ofxSimpleTimer timerCambioCamara;
 };

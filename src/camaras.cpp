@@ -22,32 +22,95 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     madePhotos = 0;
     
     indexCamera = _indexCam;
-    initCameras();
     
     /// gui
     gui.setup("controles de camaras");
-    gui.add(whiteValues.setup("white", 0, 0, 1));
-    gui.add(exposureValue.setup("exposure", 0, 0, 1));
-    gui.add(gainValue.setup("ganancia", 0, 0, 1));
-    gui.add(focusValue.setup("focus", 0, 0, 1));
-    gui.add(brightValue.setup("brightness", 0, 0, 1));
-    gui.add(satValue.setup("saturacion", 0, 0, 1));
-    gui.add(contrastValue.setup("contraste", 0, 0, 1));
+    
+    /// camara 0
+    gui.add(whiteValues0.setup("CAM0 white", 0, 0, 1));
+    gui.add(exposureValue0.setup("CAM0 exposure", 0, 0, 1));
+    gui.add(gainValue0.setup("CAM0 ganancia", 0, 0, 1));
+    gui.add(focusValue0.setup("CAM0 focus", 0, 0, 1));
+    gui.add(brightValue0.setup("CAM0 brightness", 0, 0, 1));
+    gui.add(satValue0.setup("CAM0 saturacion", 0, 0, 1));
+    gui.add(contrastValue0.setup("CAM0 contraste", 0, 0, 1));
+    
+    /// camara 1
+    gui.add(whiteValues1.setup("CAM1 white", 0, 0, 1));
+    gui.add(exposureValue1.setup("CAM1 exposure", 0, 0, 1));
+    gui.add(gainValue1.setup("CAM1 ganancia", 0, 0, 1));
+    gui.add(focusValue1.setup("CAM1 focus", 0, 0, 1));
+    gui.add(brightValue1.setup("CAM1 brightness", 0, 0, 1));
+    gui.add(satValue1.setup("CAM1 saturacion", 0, 0, 1));
+    gui.add(contrastValue1.setup("CAM1 contraste", 0, 0, 1));
+    
+    /// camara 2
+    gui.add(whiteValues2.setup("CAM2 white", 0, 0, 1));
+    gui.add(exposureValue2.setup("CAM2 exposure", 0, 0, 1));
+    gui.add(gainValue2.setup("CAM2 ganancia", 0, 0, 1));
+    gui.add(focusValue2.setup("CAM2 focus", 0, 0, 1));
+    gui.add(brightValue2.setup("CAM2 brightness", 0, 0, 1));
+    gui.add(satValue2.setup("CAM2 saturacion", 0, 0, 1));
+    gui.add(contrastValue2.setup("CAM2 contraste", 0, 0, 1));
+    
+    
+    vidGrabber.setDeviceID(1);
+    vidGrabber.initGrabber(camWidth, camHeight);
+    
+    //uvcControl0
+    uvcControl0.setCamera(437452800);
+    uvcControl0.setAutoWhiteBalance(false);
+    uvcControl0.setAutoExposure(false);
+    uvcControl0.setAutoFocus(false);
+    
+    //uvcControl1
+    uvcControl1.setCamera(487784448);
+    uvcControl1.setAutoWhiteBalance(false);
+    uvcControl1.setAutoExposure(false);
+    uvcControl1.setAutoFocus(false);
+    
+    //uvcControl2
+    uvcControl2.setCamera(437387264);
+    uvcControl2.setAutoWhiteBalance(false);
+    uvcControl2.setAutoExposure(false);
+    uvcControl2.setAutoFocus(false);
+    
+    controls0 = uvcControl0.getCameraControls();
+    controls1 = uvcControl1.getCameraControls();
+    controls2 = uvcControl2.getCameraControls();
+    
+    
     gui.add(thresholdBrightnes.setup("threshold image valid", 0, 0, 255));
     gui.add(setsettings.setup("live settings", false));
-    
     gui.loadFromFile("settings.xml");
     
     
     /// set gui values to uvc
-    uvcControl.setWhiteBalance(whiteValues);
-    uvcControl.setExposure(exposureValue);
-    uvcControl.setGain(gainValue);
-    uvcControl.setSaturation(satValue);
-    uvcControl.setAbsoluteFocus(focusValue);
-    uvcControl.setBrightness(brightValue);
-    uvcControl.setContrast(contrastValue);
+    uvcControl0.setWhiteBalance(whiteValues0);
+    uvcControl0.setExposure(exposureValue0);
+    uvcControl0.setGain(gainValue0);
+    uvcControl0.setSaturation(satValue0);
+    uvcControl0.setAbsoluteFocus(focusValue0);
+    uvcControl0.setBrightness(brightValue0);
+    uvcControl0.setContrast(contrastValue0);
+
+    /// set gui values to uvc
+    uvcControl1.setWhiteBalance(whiteValues1);
+    uvcControl1.setExposure(exposureValue1);
+    uvcControl1.setGain(gainValue1);
+    uvcControl1.setSaturation(satValue1);
+    uvcControl1.setAbsoluteFocus(focusValue1);
+    uvcControl1.setBrightness(brightValue1);
+    uvcControl1.setContrast(contrastValue1);
     
+    /// set gui values to uvc
+    uvcControl2.setWhiteBalance(whiteValues2);
+    uvcControl2.setExposure(exposureValue2);
+    uvcControl2.setGain(gainValue2);
+    uvcControl2.setSaturation(satValue2);
+    uvcControl2.setAbsoluteFocus(focusValue2);
+    uvcControl2.setBrightness(brightValue2);
+    uvcControl2.setContrast(contrastValue2);
     // debug mode
     debugMode = false;
 
@@ -62,18 +125,7 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     ofAddListener(timerFoto.TIMER_COMPLETE , this, &camaras::timerFotoComplete);
     ofAddListener(timerCambioCamara.TIMER_COMPLETE , this, &camaras::timerCambioCamaraComplete);
 }
-//--------------------------------------------------------------
-void camaras::initCameras(){
-    vidGrabber.setDeviceID(availableCams.at(indexCamera).id);
-    vidGrabber.initGrabber(camWidth, camHeight);
-    
-    uvcControl.useCamera(0x046d, 0x82d, 0x03);
-    uvcControl.setAutoWhiteBalance(false);
-    uvcControl.setAutoExposure(false);
-    uvcControl.setAutoFocus(false);
-    controls = uvcControl.getCameraControls();
 
-}
 //--------------------------------------------------------------
 void camaras::update(){
     timerFoto.update();
@@ -84,16 +136,42 @@ void camaras::update(){
     {
         tex.loadData(vidGrabber.getPixelsRef());
     }
-    controls = uvcControl.getCameraControls();
+    
+    
+    
+    // OFXUVC
+    //
+    controls0 = uvcControl0.getCameraControls();
+    controls1 = uvcControl1.getCameraControls();
+    controls2 = uvcControl2.getCameraControls();
     
     if(setsettings){
-        uvcControl.setWhiteBalance(whiteValues);
-        uvcControl.setExposure(exposureValue);
-        uvcControl.setGain(gainValue);
-        uvcControl.setSaturation(satValue);
-        uvcControl.setAbsoluteFocus(focusValue);
-        uvcControl.setBrightness(brightValue);
-        uvcControl.setContrast(contrastValue);
+        // uvcControl0
+        uvcControl0.setWhiteBalance(whiteValues0);
+        uvcControl0.setExposure(exposureValue0);
+        uvcControl0.setGain(gainValue0);
+        uvcControl0.setSaturation(satValue0);
+        uvcControl0.setAbsoluteFocus(focusValue0);
+        uvcControl0.setBrightness(brightValue0);
+        uvcControl0.setContrast(contrastValue0);
+        
+        // uvcControl1
+        uvcControl1.setWhiteBalance(whiteValues1);
+        uvcControl1.setExposure(exposureValue1);
+        uvcControl1.setGain(gainValue1);
+        uvcControl1.setSaturation(satValue1);
+        uvcControl1.setAbsoluteFocus(focusValue1);
+        uvcControl1.setBrightness(brightValue1);
+        uvcControl1.setContrast(contrastValue1);
+        
+        // uvcControl2
+        uvcControl2.setWhiteBalance(whiteValues2);
+        uvcControl2.setExposure(exposureValue2);
+        uvcControl2.setGain(gainValue2);
+        uvcControl2.setSaturation(satValue2);
+        uvcControl2.setAbsoluteFocus(focusValue2);
+        uvcControl2.setBrightness(brightValue2);
+        uvcControl2.setContrast(contrastValue2);
     }
 }
 
