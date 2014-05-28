@@ -35,7 +35,9 @@ void testApp::keyReleased(int key){
         case 'd':
              camFutbolito.debugMode = !camFutbolito.debugMode;
             break;
-
+        case 'f':
+            ofToggleFullscreen();
+            break;
         case 48:
             if(camFutbolito.debugMode){
                 camFutbolito.cambiaCamaraDebug(0);

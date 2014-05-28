@@ -48,6 +48,7 @@ public:
     float focus;
     bool debugMode;
     string rutaCarpeta;
+    bool lastCamera;
     
     // OFXUVC
     vector<ofxUVCControl> controls0;

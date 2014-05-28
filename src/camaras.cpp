@@ -191,7 +191,9 @@ void camaras::update(){
 //--------------------------------------------------------------
 void camaras::draw(){
     ofBackground(0);
-    tex.draw(0,0, camWidth, camHeight);
+    
+    
+    tex.draw((ofGetWidth()-camWidth)/2,(ofGetHeight()-camHeight)/2, camWidth, camHeight);
    
     if(debugMode){
         ofSetColor(255);
@@ -200,6 +202,7 @@ void camaras::draw(){
         ofDrawBitmapStringHighlight("CAMARA ACTUAL ID "+ofToString(indexCamera) + "\n\nLOCATION ID " + availableCams.at(indexCamera).deviceName, camWidth - 250, 80);
         gui.draw();
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -250,6 +253,15 @@ void camaras::timerFotoComplete( int &args ){
         if(availableCams.size()>0) availableCams.erase(availableCams.begin()+indexCamera);
         
         cambiaCamara(0);
+        
+        if(availableCams.size() == 0){
+            //ya no hay mas
+             cout << "LAST CAMERA" << endl;
+            availableCams.clear();
+            availableCams = vidGrabber.listDevices();
+            vidGrabber.setDeviceID(camaraInicial);
+        }
+
     }
 }
 
