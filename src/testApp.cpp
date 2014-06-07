@@ -2,22 +2,43 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
-    //int _indexCam, int _maxPhotos, int _photoSpeed
-    string ruta = "/Users/ignaciopedreiragonzalez/Documents/OF_FUTBOLITO_081/apps/futbolito/camarasFutbolito/bin/data/fotos/";
+
+    string ruta = "/Users/ignaciopedreiragonzalez/Documents/fotosFutbolitoParaSubir/";
+    string arduFutbolin = "/dev/tty.usbmodem1441";
     
     camFutbolito.setup(0,3,600,ruta);
+    
+    futbolin.setup(arduFutbolin);
+    
+    ofAddListener(futbolin.tengoDatos, this, &testApp::marcaGol);
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
     camFutbolito.update();
+    futbolin.update();
 }
 
 //--------------------------------------------------------------
 void testApp::draw(){
     camFutbolito.draw();
+    
+    
 }
 
+//------------------------------------------------------------------------------
+void testApp::marcaGol(int & equipo){
+    cout << "goooool del equipo " << equipo << endl;
+    
+    if(camFutbolito.debugMode){
+        camFutbolito.cambiaCamaraDebug(equipo);
+    }else{
+        camFutbolito.camaraGol(equipo);
+    }
+    
+}
+
+//------------------------------------------------------------------------------
 void testApp::exit(){
     
     camFutbolito.recorder.waitForThread();
