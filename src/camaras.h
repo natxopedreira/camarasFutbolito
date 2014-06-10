@@ -15,6 +15,8 @@
 #include "ofxSimpleTimer.h"
 #include "ImageSequenceRecorder.h"
 
+
+
 class camaras{
 public:
     void setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _rutaCarpeta);

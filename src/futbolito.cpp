@@ -17,7 +17,13 @@ void futbolito::setup(string address){
     
     timeLastGoal = ofGetElapsedTimeMillis();
     
-    intervalValidGoal = 2000;
+    intervalValidGoal = 8000;
+    
+    equipo1Goles = 0;
+    equipo2Goles = 0;
+
+	fuente.loadFont("frabk.ttf", 80, true, true);
+
 }
 
 //------------------------------------------------------------------------------
@@ -71,6 +77,24 @@ void futbolito::update(){
 //------------------------------------------------------------------------------
 void futbolito::drawScore(){
     cout << "equipo 1::" << equipo1Goles << " -- equipo 2::" << equipo2Goles << endl;
+    
+    int x_inicial = (ofGetWidth()-1280)/2;
+    int y_inicial  = (ofGetHeight()-720)/2;
+    
+    int anchoMarcador = 400;
+    int altoMarcador = 120;
+    
+    ofPushStyle();
+    ofSetColor(255, 0, 0);
+    ofRect(x_inicial + (1280-anchoMarcador)/2, y_inicial + 710-altoMarcador, anchoMarcador, altoMarcador);
+    
+    ofSetColor(255, 255, 255);
+    fuente.drawString(ofToString(equipo1Goles) + " - " + ofToString(equipo2Goles), x_inicial + 20 + (1280-anchoMarcador)/2 , y_inicial + 80 + 710-altoMarcador);
+
+    ofPopStyle();
+    
+    
+    
 }
 
 //------------------------------------------------------------------------------

@@ -17,6 +17,9 @@ void camaras::setup(int _indexCam, int _maxPhotos, int _photoSpeed, string _ruta
     
     availableCams = vidGrabber.listDevices();
     
+    
+    
+    
     rutaCarpeta = _rutaCarpeta;
     maxPhotosPerCamera = _maxPhotos;
     madePhotos = 0;
@@ -192,14 +195,13 @@ void camaras::update(){
 void camaras::draw(){
     ofBackground(0);
     
-    
     tex.draw((ofGetWidth()-camWidth)/2,(ofGetHeight()-camHeight)/2, camWidth, camHeight);
    
     if(debugMode){
         ofSetColor(255);
         timerFoto.draw(camWidth - 250, 20);
         timerCambioCamara.draw(camWidth - 250, 45);
-        ofDrawBitmapStringHighlight("CAMARA ACTUAL ID "+ofToString(indexCamera) + "\n\nLOCATION ID " + availableCams.at(indexCamera).deviceName, camWidth - 250, 80);
+        if(availableCams.size()>0)ofDrawBitmapStringHighlight("CAMARA ACTUAL ID "+ofToString(indexCamera) + "\n\nLOCATION ID " + availableCams.at(indexCamera).deviceName, camWidth - 250, 80);
         gui.draw();
     }
     

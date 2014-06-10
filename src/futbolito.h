@@ -34,6 +34,8 @@ private:
     SerialDevice device;
     bool    status;
     
+
+    ofTrueTypeFont	fuente;
 };
 
 
